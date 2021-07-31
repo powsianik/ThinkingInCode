@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 // TemplateData holds data sent from handlers to templates
 type TemplateData struct{
 	StringMap map[string]string
@@ -10,4 +12,9 @@ type TemplateData struct{
 	Message string
 	Warning string
 	Error string
+	ImageUrl string
+	Title string
+	Content string
+	CreatorName string
+	CreatedAt time.Time
 }

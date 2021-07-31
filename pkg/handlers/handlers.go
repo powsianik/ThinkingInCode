@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"github.com/powsianik/thinking-in-code/pkg/config"
 	"github.com/powsianik/thinking-in-code/pkg/models"
 	"github.com/powsianik/thinking-in-code/pkg/render"
 	"net/http"
+	"time"
 )
 
 type Repository struct {
@@ -46,16 +46,46 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request){
 	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{StringMap: stringMap})
 }
 
-func Divide(w http.ResponseWriter, r *http.Request){
-	x := 100.0
-	y := 0.0
-	f, err := divide(x, y)
-	if err != nil{
-		fmt.Fprintf(w, "Cannot divide by zero")
-		return
-	}
+// Post is the post page handler
+func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
+	stringMap := make(map[string]string)
 
-	fmt.Fprintf(w, fmt.Sprintf("Result of %f divided by %f is %f", x, y, f))
+	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIp
+
+	render.RenderTemplate(w, "post.page.tmpl",
+		&models.TemplateData{StringMap: stringMap,
+								ImageUrl: "static/img/about.jpg",
+								Title: "Test post",
+								Content: "Test post's content",
+								CreatorName: "Przemysław Owsianik",
+								CreatedAt: time.Now() })
+}
+
+// Posts is the posts page handler
+func (m *Repository) Posts(w http.ResponseWriter, r *http.Request){
+	stringMap := make(map[string]string)
+
+	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIp
+
+	render.RenderTemplate(w, "post.page.tmpl",
+		&models.TemplateData{StringMap: stringMap,
+			ImageUrl: "static/img/about.jpg",
+			Title: "Test post",
+			Content: "Test post's content",
+			CreatorName: "Przemysław Owsianik",
+			CreatedAt: time.Now() })
+}
+
+// CreatePost is the page handler for creating new blog post
+func (m *Repository) CreatePost(w http.ResponseWriter, r *http.Request){
+	stringMap := make(map[string]string)
+
+	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIp
+
+	render.RenderTemplate(w, "createPost.page.tmpl", &models.TemplateData{StringMap: stringMap})
 }
 
 func divide(x,y float64)(float64, error){
