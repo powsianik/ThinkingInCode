@@ -16,8 +16,8 @@ $(window).on('load', function() {
 
 $(document).ready(function(){
 	$.i18n().load( {
-		'en': './js/jquery.i18n/language/en.json',
-		'pl': './js/jquery.i18n/language/pl.json'
+		'en': './static/js/jquery.i18n/language/en.json',
+		'pl': './static/js/jquery.i18n/language/pl.json'
 	} ).done(function() {
 		console.log("Languages loaded.");
 	});
