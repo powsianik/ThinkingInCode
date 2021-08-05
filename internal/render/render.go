@@ -3,8 +3,9 @@ package render
 import (
 	"bytes"
 	"fmt"
-	"github.com/powsianik/thinking-in-code/pkg/config"
-	"github.com/powsianik/thinking-in-code/pkg/models"
+	"github.com/justinas/nosurf"
+	config2 "github.com/powsianik/thinking-in-code/internal/config"
+	models2 "github.com/powsianik/thinking-in-code/internal/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -15,21 +16,28 @@ var functions = template.FuncMap{
 
 }
 
-var app *config.AppConfig
+var app *config2.AppConfig
 
 // SetAppConfig sets app config for render packages
-func SetAppConfig(a *config.AppConfig){
+func SetAppConfig(a *config2.AppConfig){
 	app = a
 }
 
+func AddDefaultData (td *models2.TemplateData, r *http.Request) *models2.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
+	return td
+}
+
 // RenderTemplate render a template with given name
-func RenderTemplate(w http.ResponseWriter, tmpl string, data *models.TemplateData){
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data *models2.TemplateData){
 	tc := app.TemplateCache
 
 	t, isExists := tc[tmpl]
 	if !isExists{
 		log.Fatal("Template don't exists")
 	}
+
+	data = AddDefaultData(data, r)
 
 	buf := new(bytes.Buffer)
 	_ = t.Execute(buf, data)

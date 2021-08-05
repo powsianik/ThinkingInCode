@@ -2,16 +2,16 @@ package main
 
 import (
 	"github.com/alexedwards/scs/v2"
-	"github.com/powsianik/thinking-in-code/pkg/config"
-	"github.com/powsianik/thinking-in-code/pkg/handlers"
-	"github.com/powsianik/thinking-in-code/pkg/render"
+	config2 "github.com/powsianik/thinking-in-code/internal/config"
+	handlers2 "github.com/powsianik/thinking-in-code/internal/handlers"
+	render2 "github.com/powsianik/thinking-in-code/internal/render"
 	"log"
 	"net/http"
 	"time"
 )
 
 const portNumber = ":8080"
-var app config.AppConfig
+var app config2.AppConfig
 var session *scs.SessionManager
 
 func main(){
@@ -25,17 +25,17 @@ func main(){
 
 	app.Session = session
 
-	templateCache, err := render.CreateTemplateCache()
+	templateCache, err := render2.CreateTemplateCache()
 	if err != nil{
 		log.Fatal("Error while creating template cache: ", err)
 		return
 	}
 
 	app.TemplateCache = templateCache
-	render.SetAppConfig(&app)
+	render2.SetAppConfig(&app)
 
-	var repo = handlers.CreateRepo(&app)
-	handlers.SetRepository(repo)
+	var repo = handlers2.CreateRepo(&app)
+	handlers2.SetRepository(repo)
 
 	srv := &http.Server{
 		Addr: portNumber,
