@@ -18,12 +18,18 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 offset-md-2">
+
+            {{$res := index .Data "SavePost"}}
+
             <form action="/createPost" method="post" encType="multipart/form-data" class="needs-validation" novalidate>
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
+                        {{with .Form.Errors.Get "creatorName"}}
+                        <span class="text-danger">{{.}}</span>
+                        {{end}}
                         <label>Username</label>
-                        <input type="text" name="creatorName" placeholder="Username" class="form-control" required>
+                        <input type="text" name="creatorName" value="{{$res.CreatorName}}" placeholder="Username" class="form-control" required>
                         <div class="invalid-feedback">
                             Please fill in this field
                         </div>
@@ -31,8 +37,11 @@
                 </div>
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
+                        {{with .Form.Errors.Get "title"}}
+                        <span class="text-danger">{{.}}</span>
+                        {{end}}
                         <label>Title</label>
-                        <input type="text" name="title" placeholder="Title" class="form-control" required>
+                        <input type="text" name="title" value="{{$res.Title}}" placeholder="Title" class="form-control" required>
                         <div class="invalid-feedback">
                             Please fill in this field
                         </div>
@@ -40,8 +49,11 @@
                 </div>
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
+                        {{with .Form.Errors.Get "description"}}
+                        <span class="text-danger">{{.}}</span>
+                        {{end}}
                         <label>Description</label>
-                        <input type="text" name="description" placeholder="Description" class="form-control" required>
+                        <input type="text" name="description" value="{{$res.Description}}" placeholder="Description" class="form-control" required>
                         <div class="invalid-feedback">
                             Please fill in this field
                         </div>
@@ -49,15 +61,18 @@
                 </div>
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
+                        {{with .Form.Errors.Get "content"}}
+                        <span class="text-danger">{{.}}</span>
+                        {{end}}
                         <label>Content</label>
-                        <textarea name="content" placeholder="Content ..." cols="30" rows="10" class="form-control" required></textarea>
+                        <textarea name="content" placeholder="Content ..." cols="30" rows="10" class="form-control" required>{{$res.Content}}</textarea>
                         <div class="invalid-feedback">
                             Please fill in this field
                         </div>
                     </div>
                 </div>
                 <div class="form-group mt-3">
-                    <input type="file" name="image" class="form-control-file">
+                    <input type="file" name="image" value="{{$res.ImageUrl}}" class="form-control-file">
                 </div>
                 <div class="form-group my-4 text-center">
                     <button class="btn btn-primary">Create Post</button>

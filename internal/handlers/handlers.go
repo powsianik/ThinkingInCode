@@ -1,22 +1,23 @@
 package handlers
 
 import (
-	config2 "github.com/powsianik/thinking-in-code/internal/config"
-	models2 "github.com/powsianik/thinking-in-code/internal/models"
-	render2 "github.com/powsianik/thinking-in-code/internal/render"
+	config "github.com/powsianik/thinking-in-code/internal/config"
+	"github.com/powsianik/thinking-in-code/internal/forms"
+	models "github.com/powsianik/thinking-in-code/internal/models"
+	render "github.com/powsianik/thinking-in-code/internal/render"
 	"log"
 	"net/http"
 	"time"
 )
 
 type Repository struct {
-	App *config2.AppConfig
+	App *config.AppConfig
 }
 
 var Repo *Repository
 
 // CreateRepo create a new repository
-func CreateRepo(app *config2.AppConfig) *Repository {
+func CreateRepo(app *config.AppConfig) *Repository {
 	return &Repository{
 		App: app,
 	}
@@ -32,7 +33,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request){
 	remoteIp := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIp)
 
-	render2.RenderTemplate(w, r,"home.page.tmpl", &models2.TemplateData{})
+	render.RenderTemplate(w, r,"home.page.tmpl", &models.TemplateData{})
 }
 
 // About is the about page handler
@@ -43,7 +44,7 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request){
 	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = remoteIp
 
-	render2.RenderTemplate(w, r,"about.page.tmpl", &models2.TemplateData{StringMap: stringMap})
+	render.RenderTemplate(w, r,"about.page.tmpl", &models.TemplateData{StringMap: stringMap})
 }
 
 // Post is the post page handler
@@ -53,7 +54,7 @@ func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
 	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = remoteIp
 
-	post := models2.PostData{
+	post := models.PostData{
 		ImageUrl: "static/img/about.jpg",
 		Title: "Test post",
 		Content: "Test post's content",
@@ -61,8 +62,8 @@ func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
 		CreatedAt: time.Now(),
 	}
 
-	render2.RenderTemplate(w, r,"post.page.tmpl",
-		&models2.TemplateData{StringMap: stringMap, Post: post})
+	render.RenderTemplate(w, r,"post.page.tmpl",
+		&models.TemplateData{StringMap: stringMap, Post: post})
 }
 
 // Posts is the posts page handler
@@ -72,7 +73,7 @@ func (m *Repository) Posts(w http.ResponseWriter, r *http.Request){
 	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = remoteIp
 
-	post := models2.PostData{
+	post := models.PostData{
 		ImageUrl: "static/img/about.jpg",
 		Title: "Test post",
 		Content: "Test post's content",
@@ -80,18 +81,17 @@ func (m *Repository) Posts(w http.ResponseWriter, r *http.Request){
 		CreatedAt: time.Now(),
 	}
 
-	render2.RenderTemplate(w, r,"posts.page.tmpl",
-		&models2.TemplateData{StringMap: stringMap, Post: post})
+	render.RenderTemplate(w, r,"posts.page.tmpl",
+		&models.TemplateData{StringMap: stringMap, Post: post})
 }
 
-// CreatePost is the page handler for creating new blog post
+// CreatePost is the page handler for render page for creating new blog post
 func (m *Repository) CreatePost(w http.ResponseWriter, r *http.Request){
-	stringMap := make(map[string]string)
+	var emptyPost models.PostData
+	data := make(map[string]interface{})
+	data["SavePost"] = emptyPost
 
-	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = remoteIp
-
-	render2.RenderTemplate(w, r,"createPost.page.tmpl", &models2.TemplateData{StringMap: stringMap})
+	render.RenderTemplate(w, r,"createPost.page.tmpl", &models.TemplateData{ Form: forms.New(nil), Data: data})
 }
 
 func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
@@ -100,6 +100,12 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = remoteIp
 
+	err := r.ParseForm()
+	if err != nil{
+		log.Println(err)
+		return
+	}
+
 	timeLayout := "2006-01-02T15:04:05.000Z"
 	createPostTime, err := time.Parse(timeLayout, r.Form.Get("image"))
 	if err == nil{
@@ -107,13 +113,25 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	post := models2.PostData{
+	post := models.PostData{
 		ImageUrl: r.Form.Get("image"),
 		Title: r.Form.Get("title"),
 		Content: r.Form.Get("content"),
 		CreatorName: r.Form.Get("creatorName"),
+		Description: r.Form.Get("description"),
 		CreatedAt: createPostTime,
 	}
 
-	render2.RenderTemplate(w, r,"post.page.tmpl", &models2.TemplateData{StringMap: stringMap, Post: post})
+	form := forms.New(r.PostForm)
+
+	form.Required("creatorName", "title", "description", "content")
+	if !form.Valid(){
+		data := make(map[string]interface{})
+		data["SavePost"] = post
+
+		render.RenderTemplate(w, r,"createPost.page.tmpl", &models.TemplateData{StringMap: stringMap, Form: form, Data: data})
+		return
+	}
+
+	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{StringMap: stringMap, Post: post})
 }
