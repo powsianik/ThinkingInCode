@@ -4,32 +4,31 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/justinas/nosurf"
-	config2 "github.com/powsianik/thinking-in-code/internal/config"
-	models2 "github.com/powsianik/thinking-in-code/internal/models"
+	config "github.com/powsianik/thinking-in-code/internal/config"
+	models "github.com/powsianik/thinking-in-code/internal/models"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
 )
 
-var functions = template.FuncMap{
+var functions = template.FuncMap{}
 
-}
-
-var app *config2.AppConfig
+var app *config.AppConfig
+var pathToTemplates = "./templates"
 
 // SetAppConfig sets app config for render packages
-func SetAppConfig(a *config2.AppConfig){
+func SetAppConfig(a *config.AppConfig){
 	app = a
 }
 
-func AddDefaultData (td *models2.TemplateData, r *http.Request) *models2.TemplateData {
+func AddDefaultData (td *models.TemplateData, r *http.Request) *models.TemplateData {
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // RenderTemplate render a template with given name
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data *models2.TemplateData){
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data *models.TemplateData){
 	tc := app.TemplateCache
 
 	t, isExists := tc[tmpl]
@@ -52,7 +51,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data *m
 func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 
-	pages, err := filepath.Glob("./templates/*.page.tmpl")
+	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplates))
 	if err != nil{
 		return nil, err
 	}
@@ -65,13 +64,13 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 			return nil, err
 		}
 
-		matches, err := filepath.Glob("./templates/*.layout.tmpl")
+		matches, err := filepath.Glob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 		if err != nil{
 			return nil, err
 		}
 
 		if len(matches) > 0{
-			ts, err = ts.ParseGlob("./templates/*.layout.tmpl")
+			ts, err = ts.ParseGlob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 			if err != nil{
 				return nil, err
 			}

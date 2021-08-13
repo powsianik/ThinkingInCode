@@ -15,27 +15,10 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main(){
-	app.IsProduction = false
-
-	session = scs.New()
-	session.Lifetime = 24 * time.Hour
-	session.Cookie.Persist = true
-	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Cookie.Secure = false
-
-	app.Session = session
-
-	templateCache, err := render2.CreateTemplateCache()
+	err := run()
 	if err != nil{
-		log.Fatal("Error while creating template cache: ", err)
-		return
+		log.Fatal(err)
 	}
-
-	app.TemplateCache = templateCache
-	render.SetAppConfig(&app)
-
-	var repo = handlers.CreateRepo(&app)
-	handlers.SetRepository(repo)
 
 	srv := &http.Server{
 		Addr: portNumber,
@@ -47,4 +30,30 @@ func main(){
 	if err != nil{
 		log.Fatal(err)
 	}
+}
+
+func run() error{
+	app.IsProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = false
+
+	app.Session = session
+
+	templateCache, err := render.CreateTemplateCache()
+	if err != nil{
+		log.Fatal("Error while creating template cache: ", err)
+		return err
+	}
+
+	app.TemplateCache = templateCache
+	render.SetAppConfig(&app)
+
+	var repo = handlers.CreateRepo(&app)
+	handlers.SetRepository(repo)
+
+	return nil
 }
