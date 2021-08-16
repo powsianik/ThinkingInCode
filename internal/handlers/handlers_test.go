@@ -20,7 +20,6 @@ var theTests = []struct{
 	expectedStatusCode int
 }{
 	{"home", "/", "GET", []sendData{}, http.StatusOK},
-	{"about", "/about", "GET", []sendData{}, http.StatusOK},
 	{"post", "/post", "GET", []sendData{}, http.StatusOK},
 	{"posts", "/posts", "GET", []sendData{}, http.StatusOK},
 	{"createPost", "/createPost", "GET", []sendData{}, http.StatusOK},

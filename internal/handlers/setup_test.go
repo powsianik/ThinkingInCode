@@ -48,7 +48,6 @@ func getRoutes() http.Handler{
 	mux.Use(SessionLoad)
 
 	mux.Get("/", Repo.Home)
-	mux.Get("/about", Repo.About)
 	mux.Get("/posts", Repo.Posts)
 	mux.Get("/post", Repo.Post)
 	mux.Get("/createPost", Repo.CreatePost)

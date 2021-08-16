@@ -4,9 +4,11 @@ import (
 	"github.com/alexedwards/scs/v2"
 	config "github.com/powsianik/thinking-in-code/internal/config"
 	handlers "github.com/powsianik/thinking-in-code/internal/handlers"
+	"github.com/powsianik/thinking-in-code/internal/helpers"
 	render "github.com/powsianik/thinking-in-code/internal/render"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -35,6 +37,12 @@ func main(){
 func run() error{
 	app.IsProduction = false
 
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
+
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
@@ -54,6 +62,8 @@ func run() error{
 
 	var repo = handlers.CreateRepo(&app)
 	handlers.SetRepository(repo)
+
+	helpers.NewHelpers(&app)
 
 	return nil
 }
