@@ -5,7 +5,6 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/justinas/nosurf"
 	"github.com/powsianik/thinking-in-code/internal/config"
 	"github.com/powsianik/thinking-in-code/internal/render"
 	"html/template"
@@ -46,7 +45,6 @@ func getRoutes() http.Handler{
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.Recoverer)
-	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
 	mux.Get("/", Repo.Home)
@@ -60,18 +58,6 @@ func getRoutes() http.Handler{
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 
 	return mux
-}
-
-func NoSurf(next http.Handler) http.Handler{
-	csrfHandler := nosurf.New(next)
-	csrfHandler.SetBaseCookie(http.Cookie{
-		HttpOnly: true,
-		Path: "/",
-		Secure: app.IsProduction,
-		SameSite: http.SameSiteLaxMode,
-	})
-
-	return csrfHandler
 }
 
 func SessionLoad(next http.Handler) http.Handler{

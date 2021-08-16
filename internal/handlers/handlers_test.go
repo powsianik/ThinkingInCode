@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -23,6 +24,13 @@ var theTests = []struct{
 	{"post", "/post", "GET", []sendData{}, http.StatusOK},
 	{"posts", "/posts", "GET", []sendData{}, http.StatusOK},
 	{"createPost", "/createPost", "GET", []sendData{}, http.StatusOK},
+	{"createPost", "/createPost", "POST", []sendData{
+		{key: "creatorName", value: "Test"},
+		{key: "title", value: "Test"},
+		{key: "description", value: "Test"},
+		{key: "content", value: "Test"},
+		{key: "image", value: "Test"},
+	}, http.StatusOK},
 }
 
 func TestHandlers(t *testing.T){
@@ -42,7 +50,20 @@ func TestHandlers(t *testing.T){
 				t.Errorf("for %s, expected %d but got %d", e.name, e.expectedStatusCode, response.StatusCode)
 			}
 		} else {
+			values := url.Values{}
+			for _, x := range e.params{
+				values.Add(x.key, x.value)
+			}
 
+			response, err := ts.Client().PostForm(ts.URL + e.url, values)
+			if err != nil{
+				t.Log(err)
+				t.Fatal(err)
+			}
+
+			if response.StatusCode != e.expectedStatusCode{
+				t.Errorf("for %s, expected %d but got %d", e.name, e.expectedStatusCode, response.StatusCode)
+			}
 		}
 	}
 }
