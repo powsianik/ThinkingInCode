@@ -2,6 +2,7 @@ package handlers
 
 import (
 	config "github.com/powsianik/thinking-in-code/internal/config"
+	"github.com/powsianik/thinking-in-code/internal/dbAccess"
 	"github.com/powsianik/thinking-in-code/internal/forms"
 	"github.com/powsianik/thinking-in-code/internal/helpers"
 	models "github.com/powsianik/thinking-in-code/internal/models"
@@ -50,16 +51,10 @@ func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
 
 // Posts is the posts page handler
 func (m *Repository) Posts(w http.ResponseWriter, r *http.Request){
-	post := models.PostData{
-		ImageUrl: "static/img/about.jpg",
-		Title: "Test post",
-		Content: "Test post's content",
-		CreatorName: "Przemysław Owsianik",
-		CreatedAt: time.Now(),
-	}
+	posts := dbAccess.ReadAll()
 
 	render.RenderTemplate(w, r,"posts.page.tmpl",
-		&models.TemplateData{Post: post})
+		&models.TemplateData{Posts: posts})
 }
 
 // CreatePost is the page handler for render page for creating new blog post
@@ -105,5 +100,6 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
+	dbAccess.Write(post)
 	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{Post: post})
 }
