@@ -363,21 +363,6 @@ form .form-group:first-child .floating-label-form-group {
     border-top: 1px solid #dee2e6;
 }
 
-footer {
-    padding: 50px 0 65px;
-}
-
-footer .list-inline {
-    margin: 0;
-    padding: 0;
-}
-
-footer .copyright {
-    font-size: 14px;
-    margin-bottom: 0;
-    text-align: center;
-}
-
 .btn {
     font-size: 14px;
     font-weight: 800;
@@ -402,4 +387,14 @@ footer .copyright {
 .btn-lg {
     font-size: 16px;
     padding: 25px 35px;
+}
+
+.copyrightSection{
+    background-color: #01181e;
+    color: #dfedfa;
+    padding: 40px 5px;
+}
+
+.copyrightSection p{
+    margin: 0;
 }

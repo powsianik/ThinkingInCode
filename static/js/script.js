@@ -111,7 +111,7 @@ $(document).ready(function(){
     	return false; // Do nothing else
     });
 
-    $('#mainNav li a').click(function(e) {
+    $('.forSlide a').click(function(e) {
     	e.preventDefault();
 
     	var target = $(this).attr("href");
