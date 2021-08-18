@@ -13,5 +13,6 @@ type TemplateData struct{
 	Warning   string
 	Error     string
 	Post      PostData
+	Posts	  []PostData
 	Form *forms.Form
 }
