@@ -78,7 +78,7 @@ func Read(key string, value interface{}) models.PostData{
 	if err != nil {
 		panic(err)
 	}
-	
+
 	postsCollection := client.Database("thinkingInCodeBlog").Collection("posts")
 	var postToRead models.PostData
 	if err = postsCollection.FindOne(ctx, bson.M{key: value}).Decode(&postToRead); err != nil {
