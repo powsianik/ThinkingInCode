@@ -22,13 +22,13 @@
 
             {{range .Posts}}
             <div class="post-preview">
-                <a href="">
+                <a href="post/{{.Id.Hex}}">
                     <h2 class="post-title">
                         {{.Title}}
                     </h2>
                 </a>
                 <p class="post-meta">Posted by
-                    <a href="#"></a>
+                    <a href="post/{{.Id}}"></a>
                     on
                 </p>
             </div>

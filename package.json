@@ -1,0 +1,27 @@
+{
+  "name": "ThinkingInCodeGoWebsite",
+  "version": "1.0.0",
+  "dependencies": {},
+  "main": "handlerEditor.js",
+  "scripts": {
+    "dev": "webpack --watch --mode=development",
+    "serv": "webpack-dev-server --mode development --open",
+    "prod": "webpack --mode production",
+    "gobuild": "./buildandrun.sh"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@editorjs/delimiter": "^1.2.0",
+    "@editorjs/editorjs": "^2.22.2",
+    "@editorjs/embed": "^2.4.6",
+    "@editorjs/header": "^2.6.1",
+    "@editorjs/list": "^1.6.2",
+    "@editorjs/paragraph": "^2.8.0",
+    "@editorjs/simple-image": "^1.4.1",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.0.0"
+  }
+}

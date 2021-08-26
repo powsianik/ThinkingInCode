@@ -23,7 +23,7 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+            <div id="content" class="col-lg-8 col-md-10 mx-auto">
                 {{ .Post.Content }}
             </div>
         </div>
@@ -32,4 +32,15 @@
 
 <hr>
 
+{{end}}
+
+{{define "js"}}
+<script>
+     (function() {
+         'use strict';
+         window.addEventListener('load', function() {
+                 document.getElementById("content").innerHTML = $("#content").text();
+                 });
+     })();
+</script>
 {{end}}

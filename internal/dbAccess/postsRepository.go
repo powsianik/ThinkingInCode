@@ -78,7 +78,7 @@ func Read(key string, value interface{}) models.PostData{
 	if err != nil {
 		panic(err)
 	}
-
+	
 	postsCollection := client.Database("thinkingInCodeBlog").Collection("posts")
 	var postToRead models.PostData
 	if err = postsCollection.FindOne(ctx, bson.M{key: value}).Decode(&postToRead); err != nil {
@@ -108,4 +108,19 @@ func ReadAll() []models.PostData{
 	}
 
 	return posts
+}
+
+func ClearCollection(){
+	client, ctx, cancel, err := connect(connectionString)
+	defer close(client, ctx, cancel)
+	if err != nil {
+		panic(err)
+	}
+
+	postsCollection := client.Database("thinkingInCodeBlog").Collection("posts")
+	result, err := postsCollection.DeleteMany(ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("DeleteMany removed %v document(s)\n", result.DeletedCount)
 }

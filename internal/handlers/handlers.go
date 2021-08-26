@@ -1,12 +1,16 @@
 package handlers
 
 import (
+	"fmt"
+	"github.com/go-chi/chi/v5"
 	config "github.com/powsianik/thinking-in-code/internal/config"
 	"github.com/powsianik/thinking-in-code/internal/dbAccess"
+	"github.com/powsianik/thinking-in-code/internal/editorjs"
 	"github.com/powsianik/thinking-in-code/internal/forms"
 	"github.com/powsianik/thinking-in-code/internal/helpers"
 	models "github.com/powsianik/thinking-in-code/internal/models"
 	render "github.com/powsianik/thinking-in-code/internal/render"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"time"
 )
@@ -36,15 +40,14 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request){
 
 // Post is the post page handler
 func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
-
-	post := models.PostData{
-		ImageUrl: "static/img/about.jpg",
-		Title: "Test post",
-		Content: "Test post's content",
-		CreatorName: "Przemysław Owsianik",
-		CreatedAt: time.Now(),
+	postId := chi.URLParam(r, "id")
+	objID, err := primitive.ObjectIDFromHex(postId)
+	if err != nil {
+		panic(err)
 	}
 
+	post := dbAccess.Read("_id", objID)
+	post.Content = editorjs.HTML(string(post.Content))
 	render.RenderTemplate(w, r,"post.page.tmpl",
 		&models.TemplateData{Post: post})
 }
@@ -73,21 +76,16 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	timeLayout := "2006-01-02T15:04:05.000Z"
-	createPostTime, err := time.Parse(timeLayout, r.Form.Get("image"))
-	if err == nil{
-		helpers.ServerError(w, err)
-		return
-	}
-
 	post := models.PostData{
 		ImageUrl: r.Form.Get("image"),
 		Title: r.Form.Get("title"),
 		Content: r.Form.Get("content"),
 		CreatorName: r.Form.Get("creatorName"),
 		Description: r.Form.Get("description"),
-		CreatedAt: createPostTime,
+		CreatedAt: time.Now().Format("2006-01-02"),
 	}
+
+	fmt.Println(post.Content)
 
 	form := forms.New(r.PostForm)
 
@@ -101,5 +99,7 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 	}
 
 	dbAccess.Write(post)
+	post.Content = editorjs.HTML(string(post.Content))
 	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{Post: post})
 }
+
