@@ -65,17 +65,20 @@
                         <span class="text-danger">{{.}}</span>
                         {{end}}
                         <label>Content</label>
-                        <textarea id="editorjs" name="content" placeholder="Content ..." cols="30" rows="10" class="form-control" required>{{$res.Content}}</textarea>
+                        <input type="hidden" id="content" name="content" value="{{$res.Content}}">
                         <div class="invalid-feedback">
                             Please fill in this field
                         </div>
                     </div>
                 </div>
+                <div class="container">
+                    <div id="editorjs" name="content"></div>
+                </div>
                 <div class="form-group mt-3">
                     <input type="file" name="image" value="{{$res.ImageUrl}}" class="form-control-file">
                 </div>
                 <div class="form-group my-4 text-center">
-                    <button class="btn btn-primary">Create Post</button>
+                    <button id="saveButton" class="btn btn-primary">Create Post</button>
                 </div>
             </form>
         </div>
@@ -105,7 +108,5 @@
         }, false);
     })();
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-<script type="module" src="static/js/editorjsHandler.js"></script>
+<script src="static/js/bundle.js"></script>
 {{end}}
