@@ -77,6 +77,7 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 	}
 
 	post := models.PostData{
+		Id: primitive.NewObjectID(),
 		ImageUrl: r.Form.Get("image"),
 		Title: r.Form.Get("title"),
 		Content: r.Form.Get("content"),
@@ -103,3 +104,55 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{Post: post})
 }
 
+func (m*Repository) EditPostGet(w http.ResponseWriter, r *http.Request){
+	postId := chi.URLParam(r, "id")
+	objID, err := primitive.ObjectIDFromHex(postId)
+	if err != nil {
+		panic(err)
+	}
+
+	post := dbAccess.Read("_id", objID)
+	data := make(map[string]interface{})
+	data["EditPost"] = post
+	fmt.Println(post.Id)
+	render.RenderTemplate(w, r,"editPost.page.tmpl",
+		&models.TemplateData{Form: forms.New(nil), Data: data})
+}
+
+func (m*Repository) EditPost(w http.ResponseWriter, r *http.Request){
+	err := r.ParseForm()
+	if err != nil{
+		helpers.ServerError(w, err)
+		return
+	}
+
+	objID, err := primitive.ObjectIDFromHex(r.Form.Get("id"))
+	if err != nil {
+		panic(err)
+	}
+
+	post := models.PostData{
+		Id: objID,
+		ImageUrl: r.Form.Get("image"),
+		Title: r.Form.Get("title"),
+		Content: r.Form.Get("content"),
+		CreatorName: r.Form.Get("creatorName"),
+		Description: r.Form.Get("description"),
+		CreatedAt: time.Now().Format("2006-01-02"),
+	}
+
+	form := forms.New(r.PostForm)
+
+	form.Required("creatorName", "title", "description", "content")
+	if !form.Valid(){
+		data := make(map[string]interface{})
+		data["EditPost"] = post
+
+		render.RenderTemplate(w, r,"editPost.page.tmpl", &models.TemplateData{Form: form, Data: data})
+		return
+	}
+
+	dbAccess.Update(post)
+	post.Content = editorjs.HTML(string(post.Content))
+	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{Post: post})
+}

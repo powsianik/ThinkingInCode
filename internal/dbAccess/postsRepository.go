@@ -110,6 +110,29 @@ func ReadAll() []models.PostData{
 	return posts
 }
 
+func Update(data models.PostData){
+	client, ctx, cancel, err := connect(connectionString)
+	defer close(client, ctx, cancel)
+	if err != nil {
+		panic(err)
+	}
+
+	filter := bson.M{"_id": data.Id}
+	postsCollection := client.Database("thinkingInCodeBlog").Collection("posts")
+
+	var postToRead models.PostData
+	if err = postsCollection.FindOne(ctx, bson.M{"_id": data.Id}).Decode(&postToRead); err != nil {
+		log.Fatal(err)
+	}
+
+	result, err := postsCollection.ReplaceOne(ctx, filter, data)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(result)
+}
+
 func ClearCollection(){
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
