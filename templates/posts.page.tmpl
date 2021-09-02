@@ -39,7 +39,10 @@
 
             <!-- Pager -->
             <div class="clearfix">
-                <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+                <a class="btn btn-primary float-right" href="/posts/{{.NextPostPage}}">Older Posts &rarr;</a>
+                {{ if ge .PrevPostPage 1}}
+                <a class="btn btn-primary float-left" href="/posts/{{.PrevPostPage}}">Newer Posts &rarr;</a>
+                {{ end }}
             </div>
         </div>
     </div>

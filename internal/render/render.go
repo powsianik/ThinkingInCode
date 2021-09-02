@@ -12,7 +12,15 @@ import (
 	"path/filepath"
 )
 
-var functions = template.FuncMap{}
+var functions = template.FuncMap{
+	"inc": func(i int) int {
+		return i + 1
+	},
+
+	"dec": func(i int) int {
+		return i - 1
+	},
+}
 
 var app *config.AppConfig
 var pathToTemplates = "./templates"

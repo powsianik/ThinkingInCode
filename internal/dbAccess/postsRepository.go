@@ -3,6 +3,7 @@ package dbAccess
 import (
 	"context"
 	"fmt"
+	paginate "github.com/gobeam/mongo-go-pagination"
 	"github.com/powsianik/thinking-in-code/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -106,6 +107,28 @@ func ReadAll() []models.PostData{
 	if err = cursor.All(ctx, &posts); err != nil {
 		log.Fatal(err)
 	}
+
+	return posts
+}
+
+func ReadAllWithPagination(page int64) []models.PostData{
+	client, ctx, cancel, err := connect(connectionString)
+	defer close(client, ctx, cancel)
+	if err != nil {
+		panic(err)
+	}
+
+	postsCollection := client.Database("thinkingInCodeBlog").Collection("posts")
+
+	var posts []models.PostData
+	paginatedData, err := paginate.New(postsCollection).Context(ctx).Limit(5).Page(page).Sort("createdat", -1).Filter(bson.M{}).Decode(&posts).Find()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(paginatedData)
+	fmt.Println("----")
+	fmt.Println(posts)
 
 	return posts
 }

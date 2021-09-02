@@ -12,6 +12,7 @@ import (
 	render "github.com/powsianik/thinking-in-code/internal/render"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -54,10 +55,12 @@ func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
 
 // Posts is the posts page handler
 func (m *Repository) Posts(w http.ResponseWriter, r *http.Request){
-	posts := dbAccess.ReadAll()
+	pageParam := chi.URLParam(r, "page")
+	page, _ := strconv.ParseInt(pageParam, 10, 64)
+	posts :=dbAccess.ReadAllWithPagination(page)
 
 	render.RenderTemplate(w, r,"posts.page.tmpl",
-		&models.TemplateData{Posts: posts})
+		&models.TemplateData{Posts: posts, NextPostPage: page+1, PrevPostPage: page-1})
 }
 
 // CreatePost is the page handler for render page for creating new blog post

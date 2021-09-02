@@ -19,7 +19,7 @@ func routes(app *config.AppConfig) http.Handler{
 	mux.Use(SessionLoad)
 
 	mux.Get("/", handlers.Repo.Home)
-	mux.Get("/posts", handlers.Repo.Posts)
+	mux.Get("/posts/{page}", handlers.Repo.Posts)
 	mux.Get("/post/{id}", handlers.Repo.Post)
 	mux.Get("/createPost", handlers.Repo.CreatePost)
 	mux.Post("/createPost", handlers.Repo.SavePost)

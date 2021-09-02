@@ -14,5 +14,7 @@ type TemplateData struct{
 	Error     string
 	Post      PostData
 	Posts	  []PostData
+	NextPostPage int64
+	PrevPostPage int64
 	Form *forms.Form
 }
