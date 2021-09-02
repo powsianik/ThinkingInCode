@@ -30,7 +30,7 @@ func HTML(input string, options ...Options) string {
 			result = append(result, generateHTMLParagraph(el.Data))
 
 		case "list":
-			result = append(result, generateMDList(data))
+			result = append(result, generateHTMLList(data))
 
 		case "image":
 			result = append(result, generateHTMLImage(data, markdownOptions))
@@ -46,6 +46,9 @@ func HTML(input string, options ...Options) string {
 
 		case "caption":
 			result = append(result, generateMDCaption(data))
+
+		case "code":
+			result = append(result, generateHTMLCode(data))
 
 		default:
 			log.Fatal("Unknown data type: " + el.Type)
@@ -63,6 +66,11 @@ func generateHTMLHeader(el EditorJSData) string {
 
 func generateHTMLParagraph(el EditorJSData) string {
 	return fmt.Sprintf("<p>%s</p>", el.Text)
+}
+
+func generateHTMLCode(el EditorJSData) string{
+	fmt.Println(el.Content)
+	return fmt.Sprintf("<pre class=\"language-%s\" tabindex=\"0\"><code class=\"language-%s\">%s</code></pre>", el.LanguageCode, el.LanguageCode, el.Code)
 }
 
 func generateHTMLList(el EditorJSData) string {
@@ -107,6 +115,5 @@ func generateHTMLImage(el EditorJSData, options Options) string {
 		withBackground = "editorjs-withBackground"
 	}
 
-	return fmt.Sprintf(`<img src="%s" alt="%s" class="%s %s %s" />`, el.File.URL, options.Image.Caption, withBorder, stretched, withBackground)
+	return fmt.Sprintf(`<img src="%s" alt="%s" class="%s %s %s postImage" />`, el.File.URL, options.Image.Caption, withBorder, stretched, withBackground)
 }
-

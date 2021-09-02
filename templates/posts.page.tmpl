@@ -26,10 +26,12 @@
                     <h2 class="post-title">
                         {{.Title}}
                     </h2>
+                    <h6 class="post-description">
+                        {{.Description}}
+                    </h6>
                 </a>
-                <p class="post-meta">Posted by
-                    <a href="post/{{.Id}}"></a>
-                    on
+                <p class="post-meta">Posted by {{.CreatorName}}
+                    on {{.CreatedAt}}
                 </p>
             </div>
             <hr>

@@ -187,7 +187,7 @@ header.masthead .page-heading,
 header.masthead .post-heading,
 header.masthead .site-heading {
     padding: 200px 0 150px;
-    color: white;
+    color: #dfedfa;
 }
 
 @media only screen and (min-width: 768px) {
@@ -251,7 +251,7 @@ header.masthead .post-heading .meta {
 }
 
 header.masthead .post-heading .meta a {
-    color: #fff;
+    color: #dfedfa;
 }
 
 @media only screen and (min-width: 768px) {
@@ -298,6 +298,11 @@ header.masthead .post-heading .meta a {
 .post-preview > .post-meta > a:focus, .post-preview > .post-meta > a:hover {
     text-decoration: underline;
     color: #0085A1;
+}
+
+img.center{
+    display: block;
+    margin: 0 auto;
 }
 
 @media only screen and (min-width: 768px) {
@@ -379,7 +384,7 @@ form .form-group:first-child .floating-label-form-group {
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-    color: #fff;
+    color: #dfedfa;
     background-color: #00657b !important;
     border-color: #00657b !important;
 }

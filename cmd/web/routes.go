@@ -26,7 +26,6 @@ func routes(app *config.AppConfig) http.Handler{
 	mux.Get("/editPost/{id}", handlers.Repo.EditPostGet)
 	mux.Post("/editPost", handlers.Repo.EditPost)
 
-
 	workDir, _ := os.Getwd()
 	FileServer(mux, "/static", http.Dir(filepath.Join(workDir, "static")))
 	return mux

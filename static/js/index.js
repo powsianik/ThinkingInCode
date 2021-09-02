@@ -4,7 +4,8 @@ import List from '@editorjs/list';
 import Delimiter from '@editorjs/delimiter';
 import Paragraph from '@editorjs/paragraph';
 import Embed from '@editorjs/embed';
-import SimpleImage from '@editorjs/simple-image';
+import CodeTool from '/static/js/editorjscode';
+import ImageTool from '@editorjs/image';
 
 $(function() {
     let data = {};
@@ -20,16 +21,47 @@ $(function() {
              * Pass Tool's class or Settings object for each Tool you want to use
              */
             tools:{
+                image: {
+                    class: ImageTool,
+                    config: {
+                        uploader: {
+
+                            uploadByFile(file){
+                                console.log(file)
+                                return {
+                                    success: 1,
+                                    file: {
+                                        url: "/static/img/blog/"+file.name,
+                                    }
+                                };
+                            },
+
+                            uploadByUrl(url){
+                                return {
+                                    success: 1,
+                                    file: {
+                                        url: url,
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    inlineToolbar: true
+                },
                 header:Header,
                 delimiter: Delimiter,
                 paragraph: {
                     class: Paragraph,
                     inlineToolbar: true,
                 },
+                code: CodeTool,
                 embed: Embed,
-                image: SimpleImage,
+                list: {
+                    class: List,
+                    inlineToolbar: true,
+                },
             },
-            data:data
+            data:data,
         }
     );
 

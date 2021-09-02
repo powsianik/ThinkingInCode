@@ -27,6 +27,8 @@ type EditorJSData struct {
 	HTML           string     `json:"html,omitempty"`
 	Content        [][]string `json:"content,omitempty"`
 	Alignment      string     `json:"alignment,omitempty"`
+	Code		   string	  `json:"code,omitempty"`
+	LanguageCode   string	  `json:"languagecode,omitempty"`
 }
 
 type FileData struct {
