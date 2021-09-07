@@ -121,14 +121,10 @@ func ReadAllPostsWithPagination(page int64) []models.PostData{
 	postsCollection := client.Database("thinkingInCodeBlog").Collection("posts")
 
 	var posts []models.PostData
-	paginatedData, err := paginate.New(postsCollection).Context(ctx).Limit(5).Page(page).Sort("createdat", -1).Filter(bson.M{}).Decode(&posts).Find()
+	_, err = paginate.New(postsCollection).Context(ctx).Limit(5).Page(page).Sort("createdat", -1).Filter(bson.M{}).Decode(&posts).Find()
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println(paginatedData)
-	fmt.Println("----")
-	fmt.Println(posts)
 
 	return posts
 }

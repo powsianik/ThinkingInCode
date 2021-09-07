@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	config "github.com/powsianik/thinking-in-code/internal/config"
 	"github.com/powsianik/thinking-in-code/internal/dbAccess"
@@ -160,7 +159,7 @@ func (m*Repository) EditPostGet(w http.ResponseWriter, r *http.Request){
 	post := dbAccess.ReadPost("_id", objID)
 	data := make(map[string]interface{})
 	data["EditPost"] = post
-	fmt.Println(post.Id)
+
 	render.RenderTemplate(w, r,"editPost.page.tmpl",
 		&models.TemplateData{Form: forms.New(nil), Data: data})
 }
