@@ -59,7 +59,7 @@ func Ping(client *mongo.Client, ctx context.Context) error{
 	return nil
 }
 
-func Write(post models.PostData){
+func WritePost(post models.PostData){
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
 	if err != nil {
@@ -73,7 +73,7 @@ func Write(post models.PostData){
 	}
 }
 
-func Read(key string, value interface{}) models.PostData{
+func ReadPost(key string, value interface{}) models.PostData{
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
 	if err != nil {
@@ -89,7 +89,7 @@ func Read(key string, value interface{}) models.PostData{
 	return postToRead
 }
 
-func ReadAll() []models.PostData{
+func ReadAllPosts() []models.PostData{
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
 	if err != nil {
@@ -111,7 +111,7 @@ func ReadAll() []models.PostData{
 	return posts
 }
 
-func ReadAllWithPagination(page int64) []models.PostData{
+func ReadAllPostsWithPagination(page int64) []models.PostData{
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
 	if err != nil {
@@ -133,7 +133,7 @@ func ReadAllWithPagination(page int64) []models.PostData{
 	return posts
 }
 
-func Update(data models.PostData){
+func UpdatePost(data models.PostData){
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
 	if err != nil {
@@ -156,7 +156,7 @@ func Update(data models.PostData){
 	fmt.Println(result)
 }
 
-func ClearCollection(){
+func ClearPostCollection(){
 	client, ctx, cancel, err := connect(connectionString)
 	defer close(client, ctx, cancel)
 	if err != nil {
@@ -169,4 +169,34 @@ func ClearCollection(){
 		log.Fatal(err)
 	}
 	fmt.Printf("DeleteMany removed %v document(s)\n", result.DeletedCount)
+}
+
+func ReadUser(username string) models.User{
+	client, ctx, cancel, err := connect(connectionString)
+	defer close(client, ctx, cancel)
+	if err != nil {
+		panic(err)
+	}
+
+	postsCollection := client.Database("thinkingInCodeBlog").Collection("users")
+	var user models.User
+	if err = postsCollection.FindOne(ctx, bson.M{"username": username}).Decode(&user); err != nil {
+		log.Fatal(err)
+	}
+
+	return user
+}
+
+func WriteUser(post models.User){
+	client, ctx, cancel, err := connect(connectionString)
+	defer close(client, ctx, cancel)
+	if err != nil {
+		panic(err)
+	}
+
+	postsCollection := client.Database("thinkingInCodeBlog").Collection("users")
+	_, err = postsCollection.InsertOne(ctx, post)
+	if err != nil {
+		panic(err)
+	}
 }

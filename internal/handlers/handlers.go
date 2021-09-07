@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	config "github.com/powsianik/thinking-in-code/internal/config"
@@ -11,6 +12,7 @@ import (
 	models "github.com/powsianik/thinking-in-code/internal/models"
 	render "github.com/powsianik/thinking-in-code/internal/render"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"strconv"
 	"time"
@@ -39,28 +41,71 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request){
 	render.RenderTemplate(w, r,"home.page.tmpl", &models.TemplateData{})
 }
 
+// SignIn is the login handler
+func (m *Repository) SignIn(w http.ResponseWriter, r *http.Request){
+	render.RenderTemplate(w, r,"login.page.tmpl", &models.TemplateData{})
+}
+
+
+func (m *Repository) SignInPost(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil{
+		helpers.ServerError(w, err)
+		return
+	}
+
+	username := r.Form.Get("userName")
+	password := r.Form.Get("password")
+	user := dbAccess.ReadUser(username)
+
+	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(password)); err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			render.RenderTemplate(w, r,"login.page.tmpl", &models.TemplateData{})
+			return
+		}
+
+		render.RenderTemplate(w, r,"login.page.tmpl", &models.TemplateData{})
+		return
+	}
+
+	m.App.Session.Put(r.Context(), "LoginUser", username)
+	render.RenderTemplate(w, r,"home.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) LogoutPost(w http.ResponseWriter, r *http.Request) {
+	if err := m.App.Session.Destroy(r.Context()); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	render.RenderTemplate(w, r,"home.page.tmpl", &models.TemplateData{})
+}
+
 // Post is the post page handler
 func (m *Repository) Post(w http.ResponseWriter, r *http.Request){
+	username := m.App.Session.GetString(r.Context(), "LoginUser")
+
 	postId := chi.URLParam(r, "id")
 	objID, err := primitive.ObjectIDFromHex(postId)
 	if err != nil {
 		panic(err)
 	}
 
-	post := dbAccess.Read("_id", objID)
+	post := dbAccess.ReadPost("_id", objID)
 	post.Content = editorjs.HTML(string(post.Content))
 	render.RenderTemplate(w, r,"post.page.tmpl",
-		&models.TemplateData{Post: post})
+		&models.TemplateData{Post: post, UserName: username})
 }
 
 // Posts is the posts page handler
 func (m *Repository) Posts(w http.ResponseWriter, r *http.Request){
+	username := m.App.Session.GetString(r.Context(), "LoginUser")
+
 	pageParam := chi.URLParam(r, "page")
 	page, _ := strconv.ParseInt(pageParam, 10, 64)
-	posts :=dbAccess.ReadAllWithPagination(page)
+	posts :=dbAccess.ReadAllPostsWithPagination(page)
 
 	render.RenderTemplate(w, r,"posts.page.tmpl",
-		&models.TemplateData{Posts: posts, NextPostPage: page+1, PrevPostPage: page-1})
+		&models.TemplateData{Posts: posts, UserName: username, NextPostPage: page+1, PrevPostPage: page-1})
 }
 
 // CreatePost is the page handler for render page for creating new blog post
@@ -89,8 +134,6 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 		CreatedAt: time.Now().Format("2006-01-02"),
 	}
 
-	fmt.Println(post.Content)
-
 	form := forms.New(r.PostForm)
 
 	form.Required("creatorName", "title", "description", "content")
@@ -102,7 +145,7 @@ func (m*Repository) SavePost(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	dbAccess.Write(post)
+	dbAccess.WritePost(post)
 	post.Content = editorjs.HTML(string(post.Content))
 	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{Post: post})
 }
@@ -114,7 +157,7 @@ func (m*Repository) EditPostGet(w http.ResponseWriter, r *http.Request){
 		panic(err)
 	}
 
-	post := dbAccess.Read("_id", objID)
+	post := dbAccess.ReadPost("_id", objID)
 	data := make(map[string]interface{})
 	data["EditPost"] = post
 	fmt.Println(post.Id)
@@ -155,7 +198,7 @@ func (m*Repository) EditPost(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	dbAccess.Update(post)
+	dbAccess.UpdatePost(post)
 	post.Content = editorjs.HTML(string(post.Content))
 	render.RenderTemplate(w, r,"post.page.tmpl", &models.TemplateData{Post: post})
 }

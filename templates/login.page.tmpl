@@ -1,0 +1,76 @@
+{{template "blog".}}
+{{define "content"}}
+
+<!-- Page Header -->
+<header class="masthead">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <h1>Sign In</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="loginContainer" class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            {{$res := index .Data "User"}}
+
+            <form action="/signIn" method="post" encType="multipart/form-data" class="needs-validation" novalidate>
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Username</label>
+                        <input type="text" name="userName" value="{{$res.UserName}}" placeholder="Username" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please fill in this field
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Title</label>
+                        <input type="password" name="password" value="{{$res.Password}}" placeholder="Password" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please fill in this field
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group my-4 text-center">
+                    <button id="signIn" class="btn btn-primary">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+<script>
+    // Self-executing function
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{{end}}
