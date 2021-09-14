@@ -40,18 +40,23 @@
                 Menu
                 <i class="fa fa-bars"></i>
             </button>
-            {{ if ne .UserName ""}}
+
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
+                {{ if ne .UserName ""}}
                     <li class="nav-item">
                         <a class="nav-link" href="/createPost">New Post</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/editPost/{{ .Post.Id.Hex}}">Edit Post</a>
                     </li>
+                   {{ end }}
+                   <li class="nav-item">
+                        <a class="nav-link" href="/posts/1">All Posts</a>
+                   </li>
                 </ul>
             </div>
-            {{ end }}
+
         </div>
     </nav>
 
