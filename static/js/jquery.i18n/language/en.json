@@ -3,7 +3,7 @@
     "authors": [
       "Przemysław Owsianik"
     ],
-    "last-updated": "2023-12-15",
+    "last-updated": "2023-12-17",
     "locale": "en"
   },
   "nav-about": "About",
@@ -63,5 +63,8 @@
   "prj-title11": "Preparing new functionalities for a large system related to handling complaint processes",
   "prj-text11": " ",
   "prj-title12": "Classification of customer data",
-  "prj-text12": " "
+  "prj-text12": " ",
+  "prj-title13": "Big web app for managing and conduct visits at customer",
+  "prj-text13": " ",
+  "prj-title14": "Gallery of pictures from travels",
 }

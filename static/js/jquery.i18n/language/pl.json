@@ -3,7 +3,7 @@
     "authors": [
       "Przemysław Owsianik"
     ],
-    "last-updated": "2023-12-15",
+    "last-updated": "2023-12-17",
     "locale": "pl"
   },
   "nav-about": "O mnie",
@@ -52,7 +52,7 @@
   "prj-text5": " ",
   "prj-title6": "System do zarządzania danymi hipotecznymi",
   "prj-text6": " ",
-  "prj-title7": "Przeprojektowanie i napisanie  systemu finansowego jako mikrousługi",
+  "prj-title7": "Przeprojektowanie i napisanie, jako mikrousługi, systemu finansowego",
   "prj-text7": " ",
   "prj-title8": "Analiza skupień",
   "prj-text8": "Znalezienie analizy skupień dla danych demograficznych i finansowych",
@@ -63,5 +63,8 @@
   "prj-title11": "Przygotowywanie nowych funkcjonalności dla dużego systemu związanego obsługą procesów reklamacyjnych",
   "prj-text11": " ",
   "prj-title12": "Klasyfikacja danych klientów",
-  "prj-text12": " "
+  "prj-text12": " ",
+  "prj-title13": "Duża aplikacja webowa do zarządzania i przeprowadzania wizyt u klienta",
+  "prj-text13": " ",
+  "prj-title14": "Galeria zdjęć z podróży",
 }
