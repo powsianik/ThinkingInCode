@@ -3,7 +3,7 @@
     "authors": [
       "Przemysław Owsianik"
     ],
-    "last-updated": "2021-03-22",
+    "last-updated": "2023-12-15",
     "locale": "en"
   },
   "nav-about": "About",
@@ -23,7 +23,7 @@
   "skills-description": "A subjective representation of my technical value, relative to C # - the language in which I have the most experience",
   "skills-c#": "Used in most of my commercial projects",
   "skills-dotnet": "I use a large part of this platform on a daily basis",
-  "skills-c++": "I started learning programming from this language. Today I use it mainly as a hobby",
+  "skills-angular": "It is my main framework for web apps now",
   "skills-python": "I use it mainly for machine learning projects",
   "skills-ml": "One of my biggest interests, especially in the context of small projects",
   "skills-js": "I use it in about 30% of my projects",

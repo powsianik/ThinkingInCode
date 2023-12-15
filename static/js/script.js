@@ -46,6 +46,11 @@ $(document).ready(function(){
 
 	$('.owl-carousel').owlCarousel({
 	    loop:true,
+		autoplay: true,
+		autoplayTimeout: 2500,
+		autoplayHoverPause: true,
+		nav: false,
+		dots: false,
 	    responsive:{
 	        0:{
 	            items:1

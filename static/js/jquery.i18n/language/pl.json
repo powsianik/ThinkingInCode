@@ -3,7 +3,7 @@
     "authors": [
       "Przemysław Owsianik"
     ],
-    "last-updated": "2021-03-22",
+    "last-updated": "2023-12-15",
     "locale": "pl"
   },
   "nav-about": "O mnie",
@@ -23,7 +23,7 @@
   "skills-description": "Subiektywna reprezentacja mojej wartości techniczej, relatywna do C# - języka w którym mam największe doświadczenie",
   "skills-c#": "Używany w większości moich komercyjnych projektów",
   "skills-dotnet": "Dużą część tej platformy wykorzystuję na co dzień",
-  "skills-c++": "Naukę progamowania zaczynałem od tego języka. Dzisiaj używam go głównie hobbystycznie",
+  "skills-angular": "W tym momencie to mój główny framework dla aplikacji webowych",
   "skills-python": "Wykorzystuję go głównie przy projektach związanych z uczeniem maszynowym",
   "skills-ml": "Jedno z moich większych zainteresowań, zwłascza w kontekście małych projektów",
   "skills-js": "Wykorzystuję go w ok. 30% swoich projektów",
