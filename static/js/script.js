@@ -15,6 +15,7 @@ $(window).on('load', function() {
 });
 
 $(document).ready(function(){
+	console.log("Start.");
 	$.i18n().load( {
 		'en': './static/js/jquery.i18n/language/en.json',
 		'pl': './static/js/jquery.i18n/language/pl.json'
@@ -80,6 +81,8 @@ $(document).ready(function(){
 		    });
     	}
     });
+
+    updateStatsSectionElements();
 
     var statsTopOffset = $('.statsSection').offset().top;
     var firstShow = true
